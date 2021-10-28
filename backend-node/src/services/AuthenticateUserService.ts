@@ -40,7 +40,7 @@ class AuthenticateUserService {
     );
 
     const { login, id, avatar_url, name } = response.data
-
+    
     let user = await prismaClient.user.findFirst({
       where: {
         github_id: id

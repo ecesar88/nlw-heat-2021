@@ -1,8 +1,22 @@
 import express from "express";
 import "dotenv/config";
 import { router } from "./routes";
+import { Server } from "socket.io";
+import http from "http";
 
 const app = express();
+
+const serverHttp = http.createServer(app);
+const io = new Server(serverHttp, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(socket);
+  console.log(`Usuário conectado no socket ${socket.id}`);
+});
 
 app.use(express.json());
 app.use(router);
@@ -18,6 +32,4 @@ app.get("/signin/callback", (req, res) => {
   return res.json(code);
 });
 
-app.listen(4000, () => {
-  console.log("Server running on port 4000");
-});
+export { serverHttp, io };
